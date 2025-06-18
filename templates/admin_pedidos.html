@@ -1,0 +1,134 @@
+{% extends "base.html" %}
+
+{% block title %}Pedidos Recibidos - Easyboy{% endblock %}
+
+{% block content %}
+
+<div style="margin-bottom: 20px;">
+    <a href="{{ url_for('admin_dashboard') }}" style="
+        display: inline-block;
+        background-color: #ff4d4d;
+        color: white;
+        padding: 10px 20px;
+        border-radius: 10px;
+        text-decoration: none;
+        font-weight: bold;
+        transition: all 0.3s ease;
+        border: 1px solid #ff9999;
+    " onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
+        ⬅️ Volver al Panel Administrativo
+    </a>
+</div>
+
+<div class="container mt-5 mb-5">
+    <h1 class="text-center mb-4 fw-bold">Pedidos Recibidos</h1>
+
+    <div class="mb-4 text-center">
+        <a href="{{ url_for('products') }}" class="btn btn-warning fw-bold">← Volver a la tienda</a>
+    </div>
+
+    {% if pedidos_con_productos %}
+    <!-- Vista tipo tabla para pantallas grandes -->
+    <div class="d-none d-lg-block table-responsive">
+        <table class="table table-bordered table-striped align-middle">
+            <thead class="table-dark text-center">
+                <tr>
+                    <th>ID</th>
+                    <th>Nombre</th>
+                    <th>Cédula</th>
+                    <th>Teléfono</th>
+                    <th>Dirección</th>
+                    <th>Método Pago</th>
+                    <th>Comprobante</th>
+                    <th>Productos</th>
+                    <th>Fecha</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in pedidos_con_productos %}
+                <tr>
+                    <td>{{ item.pedido.id }}</td>
+                    <td>{{ item.pedido.nombre }}</td>
+                    <td>{{ item.pedido.cedula }}</td>
+                    <td>{{ item.pedido.telefono }}</td>
+                    <td>{{ item.pedido.direccion or '-' }}</td>
+                    <td>{{ item.pedido.metodo_pago }}</td>
+                    <td class="text-center">
+                        {% set comp = item.pedido.comprobante %}
+                        {% if comp %}
+                            {% if comp.endswith('.pdf') %}
+                                <a href="{{ url_for('static', filename=comp) }}" target="_blank" class="btn btn-sm btn-outline-primary">Ver PDF</a>
+                            {% elif comp.endswith(('.png', '.jpg', '.jpeg', '.gif')) %}
+                                <a href="{{ url_for('static', filename=comp) }}" target="_blank">
+                                    <img src="{{ url_for('static', filename=comp) }}" class="img-thumbnail" style="max-width: 60px;" alt="Comprobante">
+                                </a>
+                            {% else %}
+                                <a href="{{ url_for('static', filename=comp) }}" target="_blank">Ver archivo</a>
+                            {% endif %}
+                        {% else %}
+                            <span class="text-muted">No disponible</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        <ul class="list-unstyled">
+                            {% for producto in item.productos_detalle %}
+                            <li class="d-flex align-items-center mb-2">
+                                <img src="{{ url_for('static', filename='imagenes/' + (producto.imagen or 'no-image.png')) }}" class="img-thumbnail me-2" style="width: 50px; height: 50px;" alt="{{ producto.nombre }}">
+                                <span>{{ producto.nombre }} x {{ producto.cantidad }}</span>
+                            </li>
+                            {% endfor %}
+                        </ul>
+                    </td>
+                    <td class="text-nowrap">{{ item.pedido.fecha.strftime('%Y-%m-%d %H:%M:%S') }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Vista tipo card para móviles -->
+    <div class="d-lg-none">
+        {% for item in pedidos_con_productos %}
+        <div class="card mb-4">
+            <div class="card-body">
+                <h5 class="card-title mb-3">Pedido #{{ item.pedido.id }}</h5>
+                <p><strong>Nombre:</strong> {{ item.pedido.nombre }}</p>
+                <p><strong>Cédula:</strong> {{ item.pedido.cedula }}</p>
+                <p><strong>Teléfono:</strong> {{ item.pedido.telefono }}</p>
+                <p><strong>Dirección:</strong> {{ item.pedido.direccion or '-' }}</p>
+                <p><strong>Método de pago:</strong> {{ item.pedido.metodo_pago }}</p>
+                <p><strong>Comprobante:</strong>
+                    {% set comp = item.pedido.comprobante %}
+                    {% if comp %}
+                        {% if comp.endswith('.pdf') %}
+                            <a href="{{ url_for('static', filename=comp) }}" target="_blank" class="btn btn-sm btn-outline-primary">Ver PDF</a>
+                        {% elif comp.endswith(('.png', '.jpg', '.jpeg', '.gif')) %}
+                            <a href="{{ url_for('static', filename=comp) }}" target="_blank">
+                                <img src="{{ url_for('static', filename=comp) }}" class="img-fluid" style="max-width: 120px;" alt="Comprobante">
+                            </a>
+                        {% else %}
+                            <a href="{{ url_for('static', filename=comp) }}" target="_blank">Ver archivo</a>
+                        {% endif %}
+                    {% else %}
+                        No disponible
+                    {% endif %}
+                </p>
+                <p><strong>Productos:</strong></p>
+                <ul class="list-unstyled">
+                    {% for producto in item.productos_detalle %}
+                    <li class="d-flex align-items-center mb-2">
+                        <img src="{{ url_for('static', filename='imagenes/' + (producto.imagen or 'no-image.png')) }}" class="img-thumbnail me-2" style="width: 50px; height: 50px;" alt="{{ producto.nombre }}">
+                        <span>{{ producto.nombre }} x {{ producto.cantidad }}</span>
+                    </li>
+                    {% endfor %}
+                </ul>
+                <p><strong>Fecha:</strong> {{ item.pedido.fecha.strftime('%Y-%m-%d %H:%M:%S') }}</p>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="alert alert-info text-center mt-4">No hay pedidos todavía.</div>
+    {% endif %}
+</div>
+{% endblock %}

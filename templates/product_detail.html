@@ -1,0 +1,82 @@
+{% extends "base.html" %}
+
+{% block content %}
+<style>
+    .producto-img {
+        max-width: 100%;
+        max-height: 500px;
+        object-fit: contain;
+    }
+    .precio {
+        font-size: 2rem;
+        color: #28a745;
+    }
+    .precio-bs {
+        font-size: 1.3rem;
+        color: #007bff;
+    }
+    .btn-comprar {
+        font-size: 1.2rem;
+        padding: 10px 20px;
+        transition: transform 0.2s ease;
+    }
+    .btn-comprar:hover {
+        transform: scale(1.05);
+    }
+    .detalle-box {
+        box-shadow: 0 0 15px rgba(0,0,0,0.1);
+        border-radius: 10px;
+        padding: 30px;
+        background-color: white;
+        max-width: 1000px;
+        width: 100%;
+    }
+</style>
+
+<div class="container-fluid px-4 my-5">
+
+    <!-- Mensajes flash -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+        <div class="mb-4">
+            {% for category, message in messages %}
+                <div class="alert alert-{{ 'danger' if category == 'error' else category }}">{{ message }}</div>
+            {% endfor %}
+        </div>
+    {% endif %}
+    {% endwith %}
+
+    <!-- Centrado del contenido -->
+    <div class="d-flex justify-content-center">
+        <div class="row detalle-box">
+            <div class="col-md-6 text-center">
+                <img src="{{ url_for('static', filename='imagenes/' + producto.imagen) }}" alt="{{ producto.nombre }}" class="producto-img img-fluid rounded">
+            </div>
+            <div class="col-md-6">
+                <h1>{{ producto.nombre }}</h1>
+                <p class="text-muted">Categoría: {{ producto.anime }}</p>
+                <p class="precio">$ {{ "{:,.2f}".format(producto.precio) }}</p>
+                <p class="precio-bs">≈ Bs {{ "{:,.2f}".format(producto.precio * tasa_bcv) }}</p>
+
+                {% if producto.descripcion %}
+                    <p><strong>Descripción:</strong> {{ producto.descripcion }}</p>
+                {% endif %}
+
+                {% if producto.talla %}
+                    <p><strong>Talla disponible:</strong> {{ producto.talla }}</p>
+                {% endif %}
+
+                <div class="mt-4">
+                    <a href="{{ url_for('add_to_cart', producto_id=producto.id) }}" class="btn btn-danger btn-comprar w-100">
+                        🛒 Agregar al carrito
+                    </a>
+                </div>
+
+                <div class="mt-3">
+                    <a href="{{ url_for('products') }}" class="btn btn-outline-secondary w-100">Volver al catálogo</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

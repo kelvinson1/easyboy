@@ -1,0 +1,99 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<!-- Enlace a Animate.css -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+
+<style>
+    body {
+        background: url("{{ url_for('static', filename='img/slide2.jpg') }}") no-repeat center center fixed;
+        background-size: cover;
+    }
+
+    .admin-panel {
+        max-width: 600px;
+        margin: 80px auto;
+        background-color: rgba(0, 0, 0, 0.92);
+        padding: 40px 30px;
+        border-radius: 20px;
+        color: white;
+        box-shadow: 0 0 20px rgba(255, 0, 0, 0.6);
+        animation: fadeInDown 1s ease;
+    }
+
+    .admin-panel h1 {
+        text-align: center;
+        font-weight: bold;
+        color: #ff4d4d;
+        margin-bottom: 30px;
+    }
+
+    .admin-panel ul {
+        list-style: none;
+        padding: 0;
+    }
+
+    .admin-panel li {
+        margin: 15px 0;
+    }
+
+    .admin-panel a {
+        display: block;
+        background-color: #111;
+        color: white;
+        padding: 12px 20px;
+        border-radius: 10px;
+        text-decoration: none;
+        font-weight: bold;
+        transition: all 0.3s ease;
+        border: 1px solid #333;
+    }
+
+    .admin-panel a:hover {
+        background-color: #ff4d4d;
+        color: white;
+        transform: scale(1.05);
+    }
+
+    .icon {
+        margin-right: 10px;
+    }
+
+    /* Íconos anime */
+    .anime-banner {
+        display: flex;
+        justify-content: center;
+        gap: 10px;
+        margin-top: 20px;
+    }
+
+    .anime-banner img {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        border: 2px solid white;
+        transition: transform 0.3s;
+    }
+
+    .anime-banner img:hover {
+        transform: scale(1.2) rotate(5deg);
+    }
+</style>
+
+<div class="admin-panel animate__animated animate__fadeInDown">
+    <h1>Panel Administrativo Easyboy</h1>
+    <ul>
+        <li><a href="{{ url_for('admin_productos') }}"><span class="icon">🧺</span>Gestionar Productos</a></li>
+        <li><a href="{{ url_for('admin_pedidos') }}"><span class="icon">📦</span>Ver Pedidos</a></li>
+        <li><a href="{{ url_for('agregar_producto') }}"><span class="icon">➕</span>Agregar Producto</a></li>
+        <li><a href="{{ url_for('configurar_secciones') }}"><span class="icon">⚙️</span>Configurar Secciones del Inicio</a></li>
+        <li><a href="{{ url_for('logout') }}"><span class="icon">🚪</span>Cerrar Sesión</a></li>
+    </ul>
+
+    <div class="anime-banner">
+        <img src="{{ url_for('static', filename='img/naruto_icon.png') }}" alt="Naruto">
+        <img src="{{ url_for('static', filename='img/dragonball_icon.png') }}" alt="Dragon Ball">
+        <img src="{{ url_for('static', filename='img/kimetsu_icon.png') }}" alt="Kimetsu">
+    </div>
+</div>
+{% endblock %}

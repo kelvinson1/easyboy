@@ -1,0 +1,154 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container-fluid px-4 my-5">
+
+    <h1 class="text-danger fw-bold mb-4"><i class="bi bi-box-seam me-2"></i>Productos Easyboy</h1>
+
+    <!-- Mostrar la tasa BCV actual -->
+    <div class="alert alert-info d-flex align-items-center" role="alert">
+        <i class="bi bi-currency-exchange me-2"></i>
+        <strong>Tasa del BCV:</strong> {{ "%.2f"|format(tasa_bcv) }} Bs/USD
+    </div>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+        <div class="mb-4">
+            {% for category, message in messages %}
+                <div class="alert alert-{{ 'danger' if category == 'error' else category }}">{{ message }}</div>
+            {% endfor %}
+        </div>
+    {% endif %}
+    {% endwith %}
+
+    <form method="get" action="{{ url_for('products') }}" class="row g-3 mb-4 align-items-center">
+        <div class="col-auto">
+            <label for="anime" class="col-form-label">Filtrar por Anime:</label>
+        </div>
+        <div class="col-auto" style="min-width: 200px;">
+            <input type="text" id="anime" name="anime" value="{{ anime_filter or '' }}" placeholder="Ejemplo: Naruto" class="form-control">
+        </div>
+        <div class="col-auto">
+            <button type="submit" class="btn btn-danger">Filtrar</button>
+        </div>
+        {% if anime_filter %}
+        <div class="col-auto">
+            <a href="{{ url_for('products') }}" class="btn btn-outline-secondary">Limpiar filtro</a>
+        </div>
+        {% endif %}
+    </form>
+
+    <div class="mb-3">
+        <a href="{{ url_for('carrito') }}" class="btn btn-outline-danger">
+            <i class="bi bi-cart"></i> Ver Carrito
+        </a>
+    </div>
+
+    {% if productos %}
+    <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-4">
+        {% for producto in productos %}
+        <div class="col">
+            <div class="card h-100 shadow-sm">
+                <img src="{{ url_for('static', filename='imagenes/' ~ producto.imagen) }}" class="card-img-top" alt="{{ producto.nombre }}">
+                <div class="card-body d-flex flex-column">
+                    <h5 class="card-title text-danger fw-bold">{{ producto.nombre }}</h5>
+                    <p class="card-text flex-grow-1">{{ producto.descripcion }}</p>
+                    <ul class="list-unstyled mb-3">
+                        <li><strong>Precio (USD):</strong> ${{ "%.2f"|format(producto.precio) }}</li>
+                        <li><strong>Precio (Bs):</strong> {{ "%.2f"|format(producto.precio * tasa_bcv) }} Bs</li>
+                        <li><strong>Talla:</strong> {{ producto.talla }}</li>
+                        <li><strong>Anime:</strong> {{ producto.anime }}</li>
+                    </ul>
+                    <button onclick="agregarAlCarrito({{ producto.id }})" class="btn btn-danger mt-auto">
+                        <i class="bi bi-cart-plus"></i> Agregar al carrito
+                    </button>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="alert alert-warning text-center">
+        No hay productos disponibles.
+    </div>
+    {% endif %}
+
+    {% if pagination.pages > 1 %}
+    <nav aria-label="Paginación productos" class="mt-4">
+        <ul class="pagination justify-content-center">
+            {% if pagination.has_prev %}
+            <li class="page-item">
+                <a class="page-link" href="{{ url_for('products', page=pagination.prev_num, anime=anime_filter) }}" aria-label="Anterior">
+                    <span aria-hidden="true">&laquo;</span>
+                </a>
+            </li>
+            {% else %}
+            <li class="page-item disabled">
+                <span class="page-link">&laquo;</span>
+            </li>
+            {% endif %}
+
+            {% for p in range(1, pagination.pages + 1) %}
+            <li class="page-item {% if p == pagination.page %}active{% endif %}">{% if p == pagination.page %}
+                <span class="page-link">{{ p }}</span>
+                {% else %}
+                <a class="page-link" href="{{ url_for('products', page=p, anime=anime_filter) }}">{{ p }}</a>
+                {% endif %}
+            </li>
+            {% endfor %}
+
+            {% if pagination.has_next %}
+            <li class="page-item">
+                <a class="page-link" href="{{ url_for('products', page=pagination.next_num, anime=anime_filter) }}" aria-label="Siguiente">
+                    <span aria-hidden="true">&raquo;</span>
+                </a>
+            </li>
+            {% else %}
+            <li class="page-item disabled">
+                <span class="page-link">&raquo;</span>
+            </li>
+            {% endif %}
+        </ul>
+    </nav>
+    {% endif %}
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+function agregarAlCarrito(productoId) {
+    fetch(`/agregar_al_carrito_ajax/${productoId}`, {
+        method: 'POST',
+        headers: {
+            "X-Requested-With": "XMLHttpRequest"
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            const contador = document.getElementById("contador-carrito");
+
+            if (contador) {
+                // Actualizar el texto numérico del contador
+                contador.textContent = data.cart_item_count;
+
+                // Asegurar que el texto oculto accesible exista
+                if (!contador.querySelector('.visually-hidden')) {
+                    const spanOculto = document.createElement('span');
+                    spanOculto.className = 'visually-hidden';
+                    spanOculto.textContent = ' productos en el carrito';
+                    contador.appendChild(spanOculto);
+                }
+            }
+            alert(data.mensaje);
+        } else {
+            alert("Error: " + data.mensaje);
+        }
+    })
+    .catch(error => {
+        console.error("Error:", error);
+        alert("Error de conexión.");
+    });
+}
+</script>
+{% endblock %}

@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div style="margin-bottom: 20px;">
+    <a href="{{ url_for('admin_dashboard') }}" style="
+        display: inline-block;
+        background-color: #ff4d4d;
+        color: white;
+        padding: 10px 20px;
+        border-radius: 10px;
+        text-decoration: none;
+        font-weight: bold;
+        transition: all 0.3s ease;
+        border: 1px solid #ff9999;
+    " onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
+        ⬅️ Volver al Panel Administrativo
+    </a>
+</div>
+
+<h2>🛒 Panel de Productos</h2>
+<a href="{{ url_for('agregar_producto') }}" class="btn btn-success mb-3">➕ Agregar Producto</a>
+<table class="table table-striped table-bordered">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Imagen</th>
+            <th>Nombre</th>
+            <th>Precio ($)</th>
+            <th>Anime</th>
+            <th>Talla</th>
+            <th>Destacado</th>
+            <th>Acciones</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for producto in productos %}
+        <tr>
+            <td>{{ producto.id }}</td>
+            <td>
+                {% if producto.imagen %}
+                <img src="{{ url_for('static', filename='imagenes/' ~ producto.imagen) }}" alt="Imagen" width="60">
+                {% else %}
+                Sin imagen
+                {% endif %}
+            </td>
+            <td>{{ producto.nombre }}</td>
+            <td>{{ producto.precio }}</td>
+            <td>{{ producto.anime }}</td>
+            <td>{{ producto.talla }}</td>
+            <td>{{ 'Sí' if producto.destacado else 'No' }}</td>
+            <td>
+                <a href="{{ url_for('editar_producto', producto_id=producto.id) }}" class="btn btn-sm btn-primary">✏️ Editar</a>
+                <form method="POST" action="{{ url_for('eliminar_producto', producto_id=producto.id) }}" style="display:inline;" onsubmit="return confirm('¿Estás seguro de eliminar este producto?');">
+                    <button type="submit" class="btn btn-sm btn-danger">🗑️ Eliminar</button>
+                </form>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

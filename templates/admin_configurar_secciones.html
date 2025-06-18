@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div style="margin-bottom: 20px;">
+    <a href="{{ url_for('admin_dashboard') }}" style="
+        display: inline-block;
+        background-color: #ff4d4d;
+        color: white;
+        padding: 10px 20px;
+        border-radius: 10px;
+        text-decoration: none;
+        font-weight: bold;
+        transition: all 0.3s ease;
+        border: 1px solid #ff9999;
+    " onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
+        ⬅️ Volver al Panel Administrativo
+    </a>
+</div>
+
+<div class="container py-5">
+    <h2 class="mb-4 text-center">⚙️ Configuración de Inicio</h2>
+
+    {% if mensaje %}
+        <div class="alert alert-success text-center">
+            {{ mensaje }}
+        </div>
+    {% endif %}
+
+    <form method="POST" action="{{ url_for('configurar_secciones') }}" class="mx-auto" style="max-width: 600px;">
+        <div class="mb-3">
+            <label for="anime1" class="form-label">Primer Anime destacado:</label>
+            <select name="anime1" id="anime1" class="form-select" required>
+                {% for anime in animes_disponibles %}
+                    <option value="{{ anime }}" {% if anime == config.anime1 %}selected{% endif %}>{{ anime }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="mb-3">
+            <label for="anime2" class="form-label">Segundo Anime destacado:</label>
+            <select name="anime2" id="anime2" class="form-select" required>
+                {% for anime in animes_disponibles %}
+                    <option value="{{ anime }}" {% if anime == config.anime2 %}selected{% endif %}>{{ anime }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="text-center">
+            <button type="submit" class="btn btn-dark">Guardar cambios</button>
+        </div>
+    </form>
+</div>
+{% endblock %}

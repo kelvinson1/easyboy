@@ -1,0 +1,246 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<!-- Hero Carrusel Fullscreen - sin márgenes -->
+<div id="heroCarousel" class="carousel slide carousel-fade" data-bs-ride="carousel" style="margin: 0; padding: 0; width: 100vw; height: 100vh; overflow: hidden;">
+  <div class="carousel-inner w-100 h-100">
+
+    <!-- Slide 1 -->
+    <div class="carousel-item active w-100 h-100">
+      <div class="w-100 h-100 position-relative" style="background: url('{{ url_for('static', filename='img/slide1.jfif') }}') center center / cover no-repeat;">
+        <div class="position-absolute top-0 start-0 w-100 h-100" style="background-color: rgba(0,0,0,0.5);"></div>
+        <div class="position-absolute top-50 start-50 translate-middle text-center text-white px-3 px-md-5">
+          <h1 class="display-4 fw-bold">Anime Streetwear</h1>
+          <p class="lead">Diseños exclusivos de tus animes favoritos. Franelas, suéteres y más.</p>
+          <a href="{{ url_for('products') }}" class="btn btn-light mt-3 px-4 py-2">Explorar catálogo</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Slide 2 -->
+    <div class="carousel-item w-100 h-100">
+      <div class="w-100 h-100 position-relative" style="background: url('{{ url_for('static', filename='img/slide2.jfif') }}') center center / cover no-repeat;">
+        <div class="position-absolute top-0 start-0 w-100 h-100" style="background-color: rgba(0,0,0,0.5);"></div>
+        <div class="position-absolute top-50 start-50 translate-middle text-center text-white px-3 px-md-5">
+          <h1 class="display-4 fw-bold">Tu estilo, tu anime</h1>
+          <p class="lead">Luce tu pasión con cada prenda de Easyboy.</p>
+          <a href="{{ url_for('products') }}" class="btn btn-light mt-3 px-4 py-2">Explorar catálogo</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Slide 3 -->
+    <div class="carousel-item w-100 h-100">
+      <div class="w-100 h-100 position-relative" style="background: url('{{ url_for('static', filename='img/slide3.jfif') }}') center center / cover no-repeat;">
+        <div class="position-absolute top-0 start-0 w-100 h-100" style="background-color: rgba(0,0,0,0.5);"></div>
+        <div class="position-absolute top-50 start-50 translate-middle text-center text-white px-3 px-md-5">
+          <h1 class="display-4 fw-bold">Colecciones únicas</h1>
+          <p class="lead">Inspiradas en Naruto, Dragon Ball, Kimetsu y más.</p>
+          <a href="{{ url_for('products') }}" class="btn btn-light mt-3 px-4 py-2">Explorar catálogo</a>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Controles -->
+  <button class="carousel-control-prev" type="button" data-bs-target="#heroCarousel" data-bs-slide="prev">
+    <span class="carousel-control-prev-icon"></span>
+    <span class="visually-hidden">Anterior</span>
+  </button>
+  <button class="carousel-control-next" type="button" data-bs-target="#heroCarousel" data-bs-slide="next">
+    <span class="carousel-control-next-icon"></span>
+    <span class="visually-hidden">Siguiente</span>
+  </button>
+</div>
+
+<!-- Secciones de productos -->
+{% macro render_productos(productos) %}
+    {% for producto in productos %}
+    <article class="col">
+        <div class="card h-100 border-0 shadow-sm">
+            <a href="{{ url_for('product_detail', producto_id=producto.id) }}">
+                <img src="{{ url_for('static', filename='imagenes/' ~ producto.imagen) }}" class="card-img-top" alt="{{ producto.nombre }}" style="height: 250px; object-fit: cover; max-width: 100%;">
+            </a>
+            <div class="card-body d-flex flex-column">
+                <h5 class="card-title fs-6">{{ producto.nombre }}</h5>
+                <p class="card-text"><strong>${{ '%.2f'|format(producto.precio) }}</strong></p>
+                <a href="{{ url_for('product_detail', producto_id=producto.id) }}" class="btn btn-outline-dark mt-auto btn-sm">Ver detalle</a>
+                <button class="btn btn-danger btn-comprar mt-2 btn-sm" data-producto-id="{{ producto.id }}">🛒 Agregar al carrito</button>
+            </div>
+        </div>
+    </article>
+    {% endfor %}
+{% endmacro %}
+
+<!-- Nuevos lanzamientos -->
+<section class="novedades py-5 text-center">
+    <div class="container-fluid">
+        <h2 class="mb-3 fs-4 fs-md-2">✨ Nuevos lanzamientos</h2>
+        <p class="fs-6 fs-md-5">Agrega estilo otaku a tu guardarropa</p>
+        <div class="row row-cols-2 row-cols-sm-3 row-cols-md-4 row-cols-lg-5 row-cols-xl-6 g-4 mt-4">
+            {% if ultimos_productos %}
+                {{ render_productos(ultimos_productos) }}
+            {% else %}
+                <p>No hay nuevos lanzamientos disponibles.</p>
+            {% endif %}
+        </div>
+    </div>
+</section>
+
+<!-- Productos destacados -->
+<section class="destacados py-5 text-center">
+    <div class="container-fluid">
+        <h2 class="mb-3 fs-4 fs-md-2">🔥 Productos destacados</h2>
+        <p class="fs-6 fs-md-5">Agrega estilo otaku a tu guardarropa</p>
+        <div class="row row-cols-2 row-cols-sm-3 row-cols-md-4 row-cols-lg-5 row-cols-xl-6 g-4 mt-4">
+            {% if productos_destacados %}
+                {{ render_productos(productos_destacados) }}
+            {% else %}
+                <p>No hay productos destacados disponibles.</p>
+            {% endif %}
+        </div>
+    </div>
+</section>
+
+<!-- Productos por Anime 1 -->
+<section class="py-5 text-center">
+    <div class="container-fluid">
+        <h2 class="mb-4 fs-4 fs-md-2">🎴 Franelas de {{ anime1 }}</h2>
+        <div class="row row-cols-2 row-cols-sm-3 row-cols-md-4 row-cols-lg-5 row-cols-xl-6 g-4">
+            {% if productos_anime1 %}
+                {{ render_productos(productos_anime1) }}
+            {% else %}
+                <p>No hay productos de {{ anime1 }} disponibles.</p>
+            {% endif %}
+        </div>
+    </div>
+</section>
+
+<!-- Banner Estilo -->
+<section class="bg-dark text-white text-center py-5 m-0">
+    <div class="container-fluid">
+        <h2 class="display-6 fw-bold fs-4 fs-md-2">¡Vive el Anime con Estilo!</h2>
+        <p class="lead fs-6 fs-md-5">Explora nuestra colección única de franelas y suéteres inspirados en tus animes favoritos.</p>
+    </div>
+</section>
+
+
+<!-- Productos por Anime 2 -->
+<section class="py-5 text-center bg-light">
+    <div class="container-fluid">
+        <h2 class="mb-4 fs-4 fs-md-2">🎴 Franelas de {{ anime2 }}</h2>
+        <div class="row row-cols-2 row-cols-sm-3 row-cols-md-4 row-cols-lg-5 row-cols-xl-6 g-4">
+            {% if productos_anime2 %}
+                {{ render_productos(productos_anime2) }}
+            {% else %}
+                <p>No hay productos de {{ anime2 }} disponibles.</p>
+            {% endif %}
+        </div>
+    </div>
+</section>
+
+<!-- Colecciones -->
+<section class="py-5 text-center">
+    <div class="container-fluid">
+        <h2 class="mb-4 fs-4 fs-md-2">🎌 Colecciones</h2>
+        <div class="row justify-content-center gy-4">
+            <div class="col-6 col-sm-4 col-md-2">
+                <img src="{{ url_for('static', filename='img/dragonballz.jpg') }}" class="img-fluid rounded" alt="Naruto">
+            </div>
+            <div class="col-6 col-sm-4 col-md-2">
+                <img src="{{ url_for('static', filename='img/dragonball.jpg') }}" class="img-fluid rounded" alt="Dragon Ball">
+            </div>
+            <div class="col-6 col-sm-4 col-md-2">
+                <img src="{{ url_for('static', filename='img/dragonballsuper.jpg') }}" class="img-fluid rounded" alt="One Piece">
+            </div>
+            <div class="col-6 col-sm-4 col-md-2">
+                <img src="{{ url_for('static', filename='img/dandadan.jpg') }}" class="img-fluid rounded" alt="Attack on Titan">
+            </div>
+            <div class="col-6 col-sm-4 col-md-2">
+                <img src="{{ url_for('static', filename='img/jujutsukaisen.jpg') }}" class="img-fluid rounded" alt="Jujutsu Kaisen">
+            </div>
+            <div class="col-6 col-sm-4 col-md-2">
+                <img src="{{ url_for('static', filename='img/attack.jpg') }}" class="img-fluid rounded" alt="Attack on Titan">
+            </div>
+            <div class="col-6 col-sm-4 col-md-2">
+                <img src="{{ url_for('static', filename='img/Berserk.jpg') }}" class="img-fluid rounded" alt="Berserk">
+            </div>
+            <div class="col-6 col-sm-4 col-md-2">
+                <img src="{{ url_for('static', filename='img/cowboybebop.jpg') }}" class="img-fluid rounded" alt="Cowboy Bebop">
+            </div>
+            <div class="col-6 col-sm-4 col-md-2">
+                <img src="{{ url_for('static', filename='img/deathnote.jpg') }}" class="img-fluid rounded" alt="Death Note">
+            </div>
+            <div class="col-6 col-sm-4 col-md-2">
+                <img src="{{ url_for('static', filename='img/drstone.jpg') }}" class="img-fluid rounded" alt="Dr. Stone">
+            </div>
+            <div class="col-6 col-sm-4 col-md-2">
+                <img src="{{ url_for('static', filename='img/fullmetal.jpg') }}" class="img-fluid rounded" alt="Fullmetal Alchemist">
+            </div>
+            <div class="col-6 col-sm-4 col-md-2">
+                <img src="{{ url_for('static', filename='img/hunterxhunter.jpg') }}" class="img-fluid rounded" alt="Hunter x Hunter">
+            </div>
+            <div class="col-6 col-sm-4 col-md-2">
+                <img src="{{ url_for('static', filename='img/jojo.jpg') }}" class="img-fluid rounded" alt="JoJo's Bizarre Adventure">
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<!-- Redes Sociales -->
+<section class="contacto-redes py-5 text-center">
+    <div class="container-fluid">
+        <h2 class="mb-3 fs-4 fs-md-2">Síguenos y únete a nuestra comunidad</h2>
+        <p class="fs-6 fs-md-5">Recibe novedades, descuentos y nuevos lanzamientos directamente en tus redes</p>
+        <div class="d-flex justify-content-center gap-4 mt-4">
+            <a href="https://instagram.com/tu_cuenta" target="_blank" rel="noopener noreferrer">
+                <img src="{{ url_for('static', filename='icons/instagram.png') }}" width="40" alt="Instagram">
+            </a>
+            <a href="https://wa.me/584123456789" target="_blank" rel="noopener noreferrer">
+                <img src="{{ url_for('static', filename='icons/whatsapp.png') }}" width="40" alt="WhatsApp">
+            </a>
+            <a href="https://tiktok.com/@tu_cuenta" target="_blank" rel="noopener noreferrer">
+                <img src="{{ url_for('static', filename='icons/tiktok.png') }}" width="40" alt="TikTok">
+            </a>
+        </div>
+    </div>
+</section>
+
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        document.querySelectorAll(".btn-comprar").forEach(function (boton) {
+            boton.addEventListener("click", function () {
+                const productoId = this.getAttribute("data-producto-id");
+
+                fetch(`/agregar_al_carrito_ajax/${productoId}`, {
+                    method: "POST",
+                    headers: {
+                        "X-Requested-With": "XMLHttpRequest",
+                        "Content-Type": "application/json"
+                    }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        const contadorCarrito = document.getElementById('contador-carrito');
+                        if (contadorCarrito) {
+                            contadorCarrito.innerHTML = `
+                                ${data.cart_item_count}
+                                <span class="visually-hidden">productos en el carrito</span>
+                            `;
+                        }
+                        alert("Producto agregado al carrito 🛒");
+                    } else {
+                        alert("Hubo un error al agregar el producto.");
+                    }
+                })
+                .catch(() => alert("Error al conectar con el servidor"));
+            });
+        });
+    });
+</script>
+
+{% endblock %}

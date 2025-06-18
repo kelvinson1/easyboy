@@ -1,0 +1,118 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="checkout-container my-5 p-4 bg-white rounded shadow-sm" style="max-width: 700px; margin-left:auto; margin-right:auto;">
+
+    <h1 class="text-danger fw-bold mb-4"><i class="bi bi-credit-card-2-front me-2"></i>Checkout</h1>
+
+    <div class="mb-3">
+        <a href="{{ url_for('carrito') }}" class="btn btn-outline-danger">
+            <i class="bi bi-arrow-left"></i> Volver al carrito
+        </a>
+    </div>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+        <div class="mt-3">
+            {% for category, message in messages %}
+                <div class="alert alert-{{ 'danger' if category == 'error' else category }}">{{ message }}</div>
+            {% endfor %}
+        </div>
+    {% endif %}
+    {% endwith %}
+
+    {% if productos_carrito %}
+    <h3 class="mb-3">Resumen del carrito</h3>
+    <ul class="list-group mb-4">
+        {% for item in productos_carrito %}
+        <li class="list-group-item d-flex justify-content-between align-items-center">
+            {{ item.cantidad }} x {{ item.producto.nombre }}
+            <span class="badge bg-danger rounded-pill">${{ "%.2f"|format(item.subtotal) }}</span>
+        </li>
+        {% endfor %}
+    </ul>
+
+    <h4 class="mb-4">Total: <strong>${{ "%.2f"|format(total) }}</strong></h4>
+
+    <!-- Formulario de checkout -->
+    <form method="POST" action="{{ url_for('checkout') }}" enctype="multipart/form-data" novalidate>
+        <div class="mb-3">
+            <label for="nombre" class="form-label">Nombre Completo:</label>
+            <input type="text" class="form-control" id="nombre" name="nombre" required autocomplete="name" aria-required="true">
+        </div>
+
+        <div class="mb-3">
+            <label for="cedula" class="form-label">Cédula:</label>
+            <input type="text" class="form-control" id="cedula" name="cedula" required aria-required="true">
+        </div>
+
+        <div class="mb-3">
+            <label for="telefono" class="form-label">Teléfono:</label>
+            <input type="tel" class="form-control" id="telefono" name="telefono" required autocomplete="tel" aria-required="true">
+        </div>
+
+        <div class="mb-3">
+            <label for="direccion" class="form-label">Dirección (opcional):</label>
+            <textarea id="direccion" name="direccion" rows="3" class="form-control"></textarea>
+        </div>
+
+        <div class="mb-3">
+            <label for="metodo_pago" class="form-label">Método de Pago:</label>
+            <select id="metodo_pago" name="metodo_pago" class="form-select" required aria-required="true" onchange="mostrarComprobante()">
+                <option value="">-- Selecciona un método --</option>
+                <option value="Pago Móvil">Pago Móvil</option>
+                <option value="Transferencia Bancaria">Transferencia Bancaria</option>
+            </select>
+        </div>
+
+        <div id="info_pago_movil" class="mb-3" style="display:none; background-color: #f8d7da; padding: 15px; border-radius: 5px; color: #842029;">
+            <strong>Datos para Pago Móvil:</strong>
+            <p>Banco: <strong>Banco Venezuela 0102 / Bancaamiga 0172</strong></p>
+            <p>CI: <strong>30721878</strong></p>
+            <p>Número: <strong>04143979317</strong></p>
+        </div>
+
+        <div class="mb-4" id="div_comprobante" style="display:none;">
+            <label for="comprobante" class="form-label">Subir Comprobante de Pago (png, jpg, jpeg, pdf):</label>
+            <input type="file" class="form-control" id="comprobante" name="comprobante" accept=".png,.jpg,.jpeg,.pdf">
+        </div>
+
+        <button type="submit" class="btn btn-danger w-100 py-2 fw-bold fs-5">
+            Enviar Pedido <i class="bi bi-send ms-2"></i>
+        </button>
+    </form>
+
+    {% else %}
+    <div class="alert alert-warning text-center mt-4">
+        Tu carrito está vacío.
+    </div>
+    {% endif %}
+
+</div>
+
+<script>
+function mostrarComprobante() {
+    const metodo = document.getElementById('metodo_pago').value;
+    const infoPagoMovil = document.getElementById('info_pago_movil');
+    const divComprobante = document.getElementById('div_comprobante');
+    const comprobanteInput = document.getElementById('comprobante');
+
+    if (metodo === 'Pago Móvil') {
+        infoPagoMovil.style.display = 'block';
+        divComprobante.style.display = 'block';
+        comprobanteInput.setAttribute('required', 'required');
+        comprobanteInput.setAttribute('aria-required', 'true');
+    } else {
+        infoPagoMovil.style.display = 'none';
+        divComprobante.style.display = 'none';
+        comprobanteInput.removeAttribute('required');
+        comprobanteInput.setAttribute('aria-required', 'false');
+        comprobanteInput.value = '';
+    }
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+    mostrarComprobante();
+});
+</script>
+{% endblock %}

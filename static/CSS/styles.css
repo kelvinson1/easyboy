@@ -1,0 +1,295 @@
+/* RESET GENERAL */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+html, body {
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden;
+    scroll-behavior: smooth;
+    font-family: 'Segoe UI', sans-serif;
+    background: #f9f9f9;
+    color: #222;
+    line-height: 1.6;
+}
+
+/* CARRUSEL */
+#heroCarousel,
+#heroCarousel .carousel-inner,
+#heroCarousel .carousel-item {
+    width: 100vw;
+    height: 100vh;
+    margin: 0;
+    padding: 0;
+}
+
+#heroCarousel .carousel-item {
+    position: relative;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+#heroCarousel .carousel-item > .overlay {
+    position: absolute;
+    top: 0; left: 0;
+    height: 100%;
+    width: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 1;
+}
+
+#heroCarousel .carousel-caption {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    color: white;
+    z-index: 2;
+    padding: 1rem 2rem;
+}
+
+#heroCarousel h1, 
+#heroCarousel p {
+    margin-bottom: 1rem;
+}
+
+#heroCarousel a.btn {
+    background-color: #fff;
+    color: #000;
+    font-weight: 600;
+    padding: 10px 24px;
+    border-radius: 8px;
+    transition: all 0.2s ease;
+}
+
+#heroCarousel a.btn:hover {
+    background-color: #ddd;
+}
+
+/* NAVBAR */
+.navbar {
+    background: #000;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 10
+}
+.navbar-nav .nav-link {
+    color: white;
+    font-weight: 500;
+}
+.navbar-nav .nav-link:hover {
+    text-decoration: underline;
+}
+.logo {
+    height: 50px;
+}
+
+/* HERO SECTION */
+.hero-section {
+    height: 85vh;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    color: white;
+}
+.hero-section .container {
+    z-index: 2;
+    position: relative;
+}
+.hero-section .overlay {
+    position: absolute;
+    top: 0; left: 0;
+    background: rgba(0, 0, 0, 0.6);
+    height: 100%;
+    width: 100%;
+    z-index: 1;
+}
+.fullwidth-container {
+    max-width: 1280px;
+    margin: auto;
+    padding: 0 15px;
+}
+
+/* BOTONES */
+.btn {
+    background: #e60012;
+    color: white;
+    padding: 10px 24px;
+    border: none;
+    border-radius: 10px;
+    font-weight: bold;
+    transition: background 0.2s ease;
+}
+.btn:hover {
+    background: #b3000f;
+}
+
+/* SECCIONES */
+section {
+    padding: 60px 20px;
+}
+section h2 {
+    font-size: 2rem;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+section p {
+    color: #555;
+    font-size: 1rem;
+}
+
+/* PRODUCTOS */
+.card {
+    border-radius: 12px;
+    overflow: hidden;
+    transition: transform 0.2s ease;
+}
+.card:hover {
+    transform: translateY(-5px);
+}
+.card-img-top {
+    height: 250px;
+    object-fit: cover;
+}
+.card-body {
+    padding: 20px;
+}
+
+/* CATEGORÍAS POR ANIME */
+.categoria-box img {
+    height: 120px;
+    object-fit: cover;
+    transition: transform 0.2s ease;
+    border-radius: 6px;
+    width: 100%;
+}
+.categoria-box:hover img {
+    transform: scale(1.03);
+}
+
+/* REDES SOCIALES */
+.contacto-redes img {
+    filter: grayscale(100%);
+    transition: filter 0.2s ease;
+}
+.contacto-redes img:hover {
+    filter: grayscale(0%);
+}
+
+/* FOOTER */
+footer {
+    background: #111;
+    color: white;
+    text-align: center;
+    padding: 30px 10px;
+}
+footer .social img {
+    width: 30px;
+    margin: 0 10px;
+}
+
+/* ADMIN ZONA */
+.container.pedidos-admin {
+    max-width: 1100px;
+    margin: 40px auto;
+    padding: 20px;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.05);
+}
+.titulo {
+    font-size: 2rem;
+    text-align: center;
+    margin-bottom: 20px;
+}
+.boton-volver {
+    text-align: right;
+    margin-bottom: 10px;
+}
+.boton-volver .btn {
+    background-color: #007bff;
+    color: white;
+    padding: 8px 16px;
+    border-radius: 5px;
+    font-weight: 600;
+}
+.boton-volver .btn:hover {
+    background-color: #0056b3;
+}
+.tabla-pedidos table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+}
+.tabla-pedidos th, .tabla-pedidos td {
+    padding: 12px;
+    border: 1px solid #ddd;
+    text-align: left;
+}
+.tabla-pedidos thead {
+    background-color: #007bff;
+    color: white;
+}
+.tabla-pedidos tbody tr:hover {
+    background-color: #f1f1f1;
+}
+.productos-lista {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+.producto-pedido {
+    display: flex;
+    align-items: center;
+    margin-bottom: 6px;
+}
+.img-producto-mini {
+    width: 50px;
+    height: 50px;
+    object-fit: cover;
+    margin-right: 10px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+}
+.sin-pedidos {
+    text-align: center;
+    font-size: 1.2rem;
+    color: #666;
+}
+.img-comprobante-mini {
+    max-height: 80px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    object-fit: cover;
+}
+
+/* RESPONSIVE */
+@media (max-width: 768px) {
+    #heroCarousel .carousel-caption {
+        padding: 0 1rem;
+    }
+
+    .carousel-item img {
+        height: 250px;
+    }
+
+    .hero-section {
+        height: 65vh;
+    }
+
+    .fullwidth-container {
+        padding-left: 10px;
+        padding-right: 10px;
+    }
+
+    .categoria-box img {
+        height: 100px;
+    }
+}

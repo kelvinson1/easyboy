@@ -1,0 +1,91 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<!-- Enlace a Animate.css -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+
+<style>
+    body {
+        background: url("{{ url_for('static', filename='img/slide3.jfif') }}") no-repeat center center fixed;
+        background-size: cover;
+    }
+
+    .login-container {
+        max-width: 400px;
+        margin: 100px auto;
+        background-color: rgba(0, 0, 0, 0.88);
+        padding: 30px;
+        border-radius: 20px;
+        color: white;
+        box-shadow: 0 0 20px rgba(255, 0, 0, 0.5);
+        animation: fadeInUp 1s ease;
+    }
+
+    .login-container h2 {
+        font-weight: bold;
+        color: #ff4d4d;
+        margin-bottom: 20px;
+    }
+
+    .form-control {
+        background-color: #111;
+        border: 1px solid #444;
+        color: white;
+    }
+
+    .form-control::placeholder {
+        color: #ccc;
+    }
+
+    .btn-login {
+        background-color: #ff4d4d;
+        color: white;
+        border: none;
+        font-weight: bold;
+    }
+
+    .btn-login:hover {
+        background-color: #e60000;
+    }
+
+    .anime-icon {
+        width: 60px;
+        height: 60px;
+        object-fit: cover;
+        border-radius: 50%;
+        border: 2px solid white;
+        margin: 0 5px;
+        transition: transform 0.3s ease;
+    }
+
+    .anime-icon:hover {
+        transform: scale(1.1) rotate(5deg);
+    }
+
+    .icon-row {
+        margin-top: 20px;
+    }
+</style>
+
+<div class="login-container text-center animate__animated animate__fadeInUp">
+    <h2>Bienvenido a Easyboy</h2>
+    <p class="mb-4">Inicia sesión con tu cuenta</p>
+    <form method="POST" action="{{ url_for('login') }}">
+        <div class="mb-3">
+            <input type="text" class="form-control" name="username" placeholder="Usuario" required>
+        </div>
+        <div class="mb-4">
+            <input type="password" class="form-control" name="password" placeholder="Contraseña" required>
+        </div>
+        <button type="submit" class="btn btn-login w-100 py-2">Entrar</button>
+    </form>
+
+    <!-- Íconos de anime -->
+    <div class="icon-row d-flex justify-content-center mt-4">
+        <img src="{{ url_for('static', filename='img/naruto_icon.png') }}" class="anime-icon" alt="Naruto">
+        <img src="{{ url_for('static', filename='img/dragonball_icon.png') }}" class="anime-icon" alt="Dragon Ball">
+        <img src="{{ url_for('static', filename='img/onepiece_icon.png') }}" class="anime-icon" alt="One Piece">
+        <img src="{{ url_for('static', filename='img/kimetsu_icon.png') }}" class="anime-icon" alt="Kimetsu">
+    </div>
+</div>
+{% endblock %}
