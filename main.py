@@ -370,13 +370,27 @@ def proteger_rutas_admin():
     if ruta.startswith('/admin') and 'user_id' not in session and not ruta.startswith('/admin/static'):
         return redirect(url_for('login'))
 
+from werkzeug.security import generate_password_hash, check_password_hash
+
+def crear_admin():
+    if not User.query.filter_by(username='admin').first():
+        admin = User(
+            username='admin',
+            password=generate_password_hash('easy123', method='pbkdf2:sha256')
+        )
+        db.session.add(admin)
+        db.session.commit()
+        print("✅ Usuario admin creado: admin / easy123")
+    else:
+        print("ℹ️ Usuario admin ya existe.")
+
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
         username = request.form.get('username')
         password = request.form.get('password')
-        user = User.query.filter_by(username=username, password=password).first()
-        if user:
+        user = User.query.filter_by(username=username).first()
+        if user and check_password_hash(user.password, password):
             session['user_id'] = user.id
             flash('Has iniciado sesión correctamente.', 'success')
             return redirect(url_for('admin_dashboard'))
@@ -396,15 +410,13 @@ def admin_dashboard():
 
 # ===================== FIN LOGIN Y ADMIN PANEL =====================
 
-
 if __name__ == '__main__':
     app.run(debug=True)
 else:
     with app.app_context():
         try:
-            # Verificamos si existe alguna tabla antes de crear
             db.session.execute('SELECT 1 FROM producto LIMIT 1')
         except Exception:
             print("🔧 No existen tablas. Creando todas las tablas...")
             db.create_all()
-
+            crear_admin()
