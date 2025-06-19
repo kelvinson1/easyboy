@@ -398,5 +398,13 @@ def admin_dashboard():
 
 
 if __name__ == '__main__':
+    app.run(debug=True)
+else:
     with app.app_context():
-        db.create_all()
+        try:
+            # Verificamos si existe alguna tabla antes de crear
+            db.session.execute('SELECT 1 FROM producto LIMIT 1')
+        except Exception:
+            print("🔧 No existen tablas. Creando todas las tablas...")
+            db.create_all()
+
